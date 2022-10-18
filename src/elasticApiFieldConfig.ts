@@ -23,7 +23,9 @@ export function elasticApiFieldConfig(esClientOrOpts: any): GraphQLFieldConfig<a
 }
 
 function instanceElasticClient(elasticClient: Record<string, any>): GraphQLFieldConfig<any, any> {
-  const apiVersion = elasticClient.transport._config.apiVersion || DEFAULT_ELASTIC_API_VERSION;
+  const apiVersion = elasticClient.transport._config
+    ? elasticClient.transport._config.apiVersion
+    : DEFAULT_ELASTIC_API_VERSION;
   const prefix = `ElasticAPI${apiVersion.replace('.', '')}`;
 
   const apiParser = new ElasticApiParser({
@@ -82,6 +84,10 @@ function contextElasticClient(elasticConfig: Record<string, any>): GraphQLFieldC
 
 function isElasticClient(obj: any) {
   if (obj instanceof elasticsearch.Client) {
+    return true;
+  }
+
+  if (obj && obj.transport && obj.transport.name === 'elasticsearch-js') {
     return true;
   }
 

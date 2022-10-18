@@ -300,6 +300,14 @@ export default class ElasticApiParser {
           );
         }
 
+        if (!args.body.q) {
+          delete args.defaultOperator;
+        }
+
+        if (!args.body.suggestField) {
+          delete args.suggestMode;
+        }
+
         if (Array.isArray(elasticMethod)) {
           return client[elasticMethod[0]][elasticMethod[1]]({
             ...methodArgs,

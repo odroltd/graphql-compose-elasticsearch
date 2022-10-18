@@ -190,6 +190,8 @@ export default function createSearchResolver<TSource, TContext>(
           args.body = prepareBodyInResolve(args.body, fieldMap);
         }
 
+        console.log
+
         const res: any = await searchFC.resolve(rp.source, args, rp.context, rp.info);
         if (typeof res.aggregations === 'undefined') {
           res.aggregations = res.body.aggregations;

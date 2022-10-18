@@ -1,42 +1,26 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
-
-on: [push, pull_request]
-
+name: Node.js Package
+on:
+  release:
+    types: [created]
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install node_modules
-        run: yarn
-      - name: Test & lint
-        run: yarn test
-        env:
-          CI: true
-      - name: Send codecov.io stats
-        if: matrix.node-version == '14.x'
-        run: bash <(curl -s https://codecov.io/bash) || echo ''
-
-  publish:
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta'
-    needs: [tests]
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14
-        uses: actions/setup-node@v1
+      - uses: myci-actions/export-env-var@1
         with:
-          node-version: 14.x
+          name: GITHUB_NPM_TOKEN
+          value: ${{ secrets.GITHUB_TOKEN }}
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@odroltd'
       - name: Install node_modules
         run: yarn install
       - name: Build
@@ -46,4 +30,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
