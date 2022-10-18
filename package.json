@@ -1,10 +1,13 @@
 {
   "name": "graphql-compose-elasticsearch",
-  "version": "0.0.0-semantically-released",
+  "version": "1.0.0",
   "description": "Elastic search via GraphQL",
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@odroltd"
+  },
   "main": "lib/index.js",
   "module": "mjs/index.mjs",
   "repository": {
