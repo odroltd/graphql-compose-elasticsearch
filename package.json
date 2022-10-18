@@ -1,5 +1,5 @@
 {
-  "name": "graphql-compose-elasticsearch",
+  "name": "@odroltd/graphql-compose-elasticsearch",
   "version": "1.0.0",
   "description": "Elastic search via GraphQL",
   "files": [
